@@ -16,7 +16,7 @@
 
 <h3 align="center">What I'm Currently Listening To:</h3>
 
-<p align="center"> <img src="https://spotify-recently-played-readme.vercel.app/api?user=dnovyee6f4lic0awsoi92j25p&unique={true|1|on|yes}"/>
+<p align="center"> <img src="https://spotify-recently-played-readme.vercel.app/api?user=dnovyee6f4lic0awsoi92j25p&unique=true"/>
 
 <h3 align="center">Keep This Number At 0 Challenge (Very Easy)</h3>
 <p align="center">
