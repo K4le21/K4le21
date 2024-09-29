@@ -43,8 +43,6 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          git config --local user.email "your_email@example.com"  # Your email here
-          git config --local user.name "GitHub Actions"
           git add README.md
           git commit -m "Increment follower count to $new_count" || echo "No changes to commit"
           git push origin main  # Use the GITHUB_TOKEN for pushing
