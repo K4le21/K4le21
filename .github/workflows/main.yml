@@ -20,12 +20,15 @@ jobs:
           echo "Fetching follower count..."
           response=$(curl -s -w "%{http_code}" -o response.json https://api.github.com/users/K4le21)
           echo "API response code: $response"  # Log API response code for debugging
-
+          
           if [ "$response" -ne 200 ]; then
             echo "Error: Failed to fetch followers. HTTP Status: $response"
             cat response.json  # Log the full response for further inspection
             exit 1
           fi
+
+          # Log the entire response for debugging
+          echo "API response: $(cat response.json)"
 
           # Read the JSON response
           followers=$(jq '.followers' response.json)
@@ -52,8 +55,12 @@ jobs:
         run: |
           echo "Updating README.md with new followers count..."
           echo "Followers count + 1: $followers_plus_one"  # Debug output
-          echo "Checking README.md for placeholder..."
-          grep "<!-- Follow Count -->" README.md  # Check if placeholder exists
+          
+          # Check for the placeholder and update README
+          if ! grep -q "<!-- Follow Count -->" README.md; then
+            echo "Error: Placeholder not found in README.md. Exiting."
+            exit 1
+          fi
 
           # Use sed to replace the placeholder with the new count
           sed -i "s|<span id=\"follower-count\"> <!-- Follow Count --> </span>|<span id=\"follower-count\">$followers_plus_one</span>|g" README.md
@@ -73,4 +80,6 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
+          git add README.md
+          git commit -m "Update follower count + 1" || echo "No changes to commit"
+          git push || echo "No changes to push"
