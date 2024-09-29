@@ -1,0 +1,25 @@
+name: Update Followers Count
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch followers count from GitHub API and add 1
+        run: |
+          followers=$(curl -s https://api.github.com/users/k4le21 | jq '.followers')
+          followers_plus_one=$((followers + 1))
+          echo "Followers + 1: $followers_plus_one"
+          sed -i "s/Follower Count:.*/Follower Count: $followers_plus_one/g" README.md
+      - name: Commit updated README
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git commit -m "Update follower count + 1"
+          git push
