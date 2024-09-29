@@ -21,7 +21,7 @@
 <h3 align="center">Recently Played:</h3>
 <p align="center"> <img src="https://spotify-recently-played-readme.vercel.app/api?user=dnovyee6f4lic0awsoi92j25p&unique=true"/>
 
-<h3 align="center">Get This Number To <span id="follower-count"> <!-- Follow Count --> </span> Challenge (Very Very Hard)</h3>
+<h3 align="center">Get This Number To <span id="follower-count"></span> Challenge (Very Very Hard)</h3>
 <p align="center">
       <a href="https://github.com/K4le21?tab=followers">
          <img alt="followers" title="Follow me on Github" src="https://custom-icon-badges.demolab.com/github/followers/K4le?color=236ad3&labelColor=1155ba&style=for-the-badge&logo=person-add&label=Follow&logoColor=white"/></a>
