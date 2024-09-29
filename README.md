@@ -1,6 +1,6 @@
 
-<h1 align="center">Welcome to my profile :D</h1>
-<p align="center"> <img src="https://github.com/user-attachments/assets/c8d4382c-922e-4ddc-ae3e-585abb657140"/>
+<h1 align="center">Welcome To My Profile :D</h1>
+<p align="center"> <img src="https://github.com/user-attachments/assets/dd0d83cf-03a5-4dfb-b332-8b1436c5c503"/>
 
 <h2 align="center">Connect With Me:</h2>
 <p align="center">
@@ -28,6 +28,6 @@
 
 <h2 align="center">Thanks For Visiting My Profile <3</h2>
 
-<p align="center"> <img src="https://github.com/user-attachments/assets/b5ff3a44-a965-42db-8d85-39724711c083" alt="bottom banner"/>
+<p align="center"> <img src="https://github.com/user-attachments/assets/e02c848d-5b6e-444e-9bda-3a5b03bc061e" alt="bottom banner"/>
 
 <p align="center"> meow :3
