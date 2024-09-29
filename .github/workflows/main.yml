@@ -34,7 +34,7 @@ jobs:
 
       - name: Update README
         run: |
-          sed -i 's|<span id="follower-count">Followers: [0-9]*</span>|<span id="follower-count">Followers: '"$new_count"'</span>|' README.md
+          sed -i 's|<span id="follower-count">[0-9]*</span>|<span id="follower-count">'"$new_count"'</span>|' README.md
           echo "Contents of README.md after update:"
           cat README.md  # Print the updated README.md for debugging
 
