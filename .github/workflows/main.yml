@@ -7,16 +7,29 @@ on:
 
 jobs:
   update-readme:
-    name: Update this repo's README with follower count + 1
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4  # Updated to v4
+      
       - name: Fetch followers count from GitHub API and add 1
         run: |
-          followers=$(curl -s https://api.github.com/users/k4le21 | jq '.followers')
+          echo "Fetching follower count..."
+          response=$(curl -s https://api.github.com/users/K4le21)
+          echo "API response: $response"
+          followers=$(echo "$response" | jq '.followers')
+          if [ -z "$followers" ]; then
+            echo "Error: Could not fetch followers"
+            exit 1
+          fi
           followers_plus_one=$((followers + 1))
-          echo "Followers + 1: $followers_plus_one"
+          echo "Followers: $followers, Followers + 1: $followers_plus_one"
           sed -i "s/Follower Count:.*/Follower Count: $followers_plus_one/g" README.md
+      
+      - name: Check README changes
+        run: |
+          echo "Checking README changes..."
+          cat README.md
+      
       - name: Commit updated README
         run: |
           git config --global user.name 'github-actions[bot]'
