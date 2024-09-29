@@ -16,7 +16,7 @@ jobs:
       - name: Get Follower Count
         id: get_followers
         run: |
-          FOLLOWER_COUNT=$(curl -s https://api.github.com/users/YOUR_USERNAME | jq '.followers')
+          FOLLOWER_COUNT=$(curl -s https://api.github.com/users/K4le21 | jq '.followers')
           echo "followers=${FOLLOWER_COUNT}" >> $GITHUB_ENV
 
       - name: Debug README Before Update
