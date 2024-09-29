@@ -18,27 +18,11 @@ jobs:
       - name: Fetch followers count from GitHub API
         run: |
           echo "Fetching follower count..."
-          response=$(curl -s -w "%{http_code}" -o response.json https://api.github.com/users/K4le21)
-          echo "API response code: $response"  # Log API response code for debugging
-          
-          if [ "$response" -ne 200 ]; then
-            echo "Error: Failed to fetch followers. HTTP Status: $response"
-            cat response.json  # Log the full response for further inspection
-            exit 1
-          fi
+          response=$(curl -s https://api.github.com/users/K4le21)
+          echo "API response: $response"  # Log the full API response
 
-          # Log the entire response for debugging
-          echo "API response: $(cat response.json)"
-
-          # Read the JSON response
-          followers=$(jq '.followers' response.json)
+          followers=$(echo "$response" | jq '.followers')
           echo "Followers count: $followers"  # Log the extracted followers count
-
-          # Check if followers were successfully fetched
-          if [ -z "$followers" ] || [ "$followers" == "null" ]; then
-            echo "Error: Could not fetch followers. Exiting."
-            exit 1
-          fi
 
           # Add 1 to the followers count
           followers_plus_one=$((followers + 1))
@@ -54,16 +38,16 @@ jobs:
       - name: Update README.md with follower count + 1
         run: |
           echo "Updating README.md with new followers count..."
-          echo "Followers count + 1: $followers_plus_one"  # Debug output
-          
+
           # Check for the placeholder and update README
-          if ! grep -q "<!-- Follow Count -->" README.md; then
+          placeholder_exists=$(grep -c "Follow Count" README.md)
+          if [ "$placeholder_exists" -eq 0 ]; then
             echo "Error: Placeholder not found in README.md. Exiting."
             exit 1
           fi
 
           # Use sed to replace the placeholder with the new count
-          sed -i "s|<span id=\"follower-count\"> <!-- Follow Count --> </span>|<span id=\"follower-count\">$followers_plus_one</span>|g" README.md
+          sed -i "s|<span id=\"follower-count\">.*<!-- Follow Count -->.*</span>|<span id=\"follower-count\">$followers_plus_one</span>|g" README.md
 
           # Print modified README.md content for debugging
           echo "Modified README.md content:"
