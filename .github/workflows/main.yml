@@ -19,16 +19,18 @@ jobs:
         run: |
           echo "Fetching follower count..."
           response=$(curl -s https://api.github.com/users/K4le21)
-          echo "API response: $response"  # Log the full API response
+          
+          # Log the full API response for debugging
+          echo "Full API Response: $response"
 
           followers=$(echo "$response" | jq '.followers')
-          echo "Followers count: $followers"  # Log the extracted followers count
+          echo "Extracted Followers count: $followers"
 
           # Add 1 to the followers count
           followers_plus_one=$((followers + 1))
-          echo "Followers + 1: $followers_plus_one"
+          echo "Followers count + 1: $followers_plus_one"
 
-          # Check if the followers_plus_one variable is empty or not
+          # Check if followers_plus_one is empty
           if [ -z "$followers_plus_one" ]; then
             echo "Error: followers_plus_one is empty. Exiting."
             exit 1
