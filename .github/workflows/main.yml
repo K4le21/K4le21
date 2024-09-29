@@ -46,6 +46,12 @@ jobs:
         run: |
           echo "Updating README.md with new followers count..."
 
+          # Check if README.md file exists
+          if [ ! -f "README.md" ]; then
+            echo "Error: README.md file not found! Exiting."
+            exit 1
+          fi
+
           # Check for the placeholder in the README.md
           placeholder_exists=$(grep -c "Follow Count" README.md)
           echo "Placeholder exists: $placeholder_exists"
@@ -55,7 +61,7 @@ jobs:
             exit 1
           fi
 
-          # Use sed to replace the placeholder with the new followers count
+          # Replace the placeholder with the new followers count
           sed -i "s|<span id=\"follower-count\">.*<!-- Follow Count -->.*</span>|<span id=\"follower-count\">$followers_plus_one</span>|g" README.md
 
           # Display the modified README.md for debugging
