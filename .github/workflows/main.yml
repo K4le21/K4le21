@@ -9,28 +9,47 @@ jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # Updated to v4
-      
-      - name: Fetch followers count from GitHub API and add 1
+      - uses: actions/checkout@v4  # Using v4
+
+      # Step 1: Fetch followers count from GitHub API
+      - name: Fetch followers count from GitHub API
         run: |
           echo "Fetching follower count..."
           response=$(curl -s https://api.github.com/users/K4le21)
-          echo "API response: $response"
+          echo "API response: $response"  # Log API response for debugging
+
+          # Extract followers using jq
           followers=$(echo "$response" | jq '.followers')
-          if [ -z "$followers" ]; then
-            echo "Error: Could not fetch followers"
+          echo "Followers count: $followers"  # Log the extracted followers count
+
+          # Check if followers were successfully fetched
+          if [ -z "$followers" ] || [ "$followers" == "null" ]; then
+            echo "Error: Could not fetch followers. Exiting."
             exit 1
           fi
+
+          # Add 1 to the followers count
           followers_plus_one=$((followers + 1))
-          echo "Followers: $followers, Followers + 1: $followers_plus_one"
-          sed -i "s/Follower Count:.*/Follower Count: $followers_plus_one/g" README.md
-      
-      - name: Check README changes
+          echo "Followers + 1: $followers_plus_one"
+
+      # Step 2: Modify README.md with the new followers count
+      - name: Update README.md with follower count + 1
         run: |
-          echo "Checking README changes..."
+          echo "Updating README.md with new followers count..."
+          sed -i "s/Follower Count:.*/Follower Count: $followers_plus_one/g" README.md
+
+          # Check if sed successfully updated the README.md file
+          echo "Modified README.md content:"
           cat README.md
-      
-      - name: Commit updated README
+
+          # Check if the file was modified
+          if ! grep -q "Follower Count: $followers_plus_one" README.md; then
+            echo "Error: README.md was not updated correctly. Exiting."
+            exit 1
+          fi
+
+      # Step 3: Commit and push changes
+      - name: Commit updated README.md
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
