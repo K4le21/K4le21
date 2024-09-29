@@ -18,55 +18,18 @@ jobs:
       - name: Fetch followers count from GitHub API
         run: |
           echo "Fetching follower count..."
-          response=$(curl -s https://api.github.com/users/K4le21)
-          echo "API response: $response"  # Log API response for debugging
+          response=$(curl -s -w "%{http_code}" -o response.json https://api.github.com/users/K4le21)
+          echo "API response code: $response"  # Log API response code for debugging
 
-          # Extract followers using jq
-          followers=$(echo "$response" | jq '.followers')
+          if [ "$response" -ne 200 ]; then
+            echo "Error: Failed to fetch followers. HTTP Status: $response"
+            cat response.json  # Log the full response for further inspection
+            exit 1
+          fi
+
+          # Read the JSON response
+          followers=$(jq '.followers' response.json)
           echo "Followers count: $followers"  # Log the extracted followers count
 
           # Check if followers were successfully fetched
-          if [ -z "$followers" ] || [ "$followers" == "null" ]; then
-            echo "Error: Could not fetch followers. Exiting."
-            exit 1
-          fi
-
-          # Add 1 to the followers count
-          followers_plus_one=$((followers + 1))
-          echo "Followers + 1: $followers_plus_one"
-
-          # Check if the followers_plus_one variable is empty or not
-          if [ -z "$followers_plus_one" ]; then
-            echo "Error: followers_plus_one is empty. Exiting."
-            exit 1
-          fi
-
-      # Step 2: Modify README.md with the new followers count
-      - name: Update README.md with follower count + 1
-        run: |
-          echo "Updating README.md with new followers count..."
-          echo "Followers count + 1: $followers_plus_one"  # Debug output
-          echo "Checking README.md for placeholder..."
-          grep "<!-- Follow Count -->" README.md  # Check if placeholder exists
-
-          # Use sed to replace the placeholder with the new count
-          sed -i "s|<span id=\"follower-count\"> <!-- Follow Count --> </span>|<span id=\"follower-count\">$followers_plus_one</span>|g" README.md
-
-          # Print modified README.md content for debugging
-          echo "Modified README.md content:"
-          cat README.md
-
-          # Check if the file was modified
-          if ! grep -q "$followers_plus_one" README.md; then
-            echo "Error: README.md was not updated correctly. Exiting."
-            exit 1
-          fi
-
-      # Step 3: Commit and push changes
-      - name: Commit updated README.md
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add README.md
-          git commit -m "Update follower count + 1"
-          git push
+          if [ -z "$followers" ] || [ "$follow
