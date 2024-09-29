@@ -16,7 +16,11 @@
 
 <h3 align="center">What I'm Currently Listening To:</h3>
 
+<p align="center"> <img src="https://spotify-github-profile.kittinanx.com/api/view?uid=dnovyee6f4lic0awsoi92j25p&cover_image=true&theme=novatorem&show_offline=false&background_color=121212&interchange=false&bar_color=53b14f&bar_color_cover=false)](https://github.com/kittinan/spotify-github-profile"/>
+
+<h3 align="center">Recently Played:</h3>
 <p align="center"> <img src="https://spotify-recently-played-readme.vercel.app/api?user=dnovyee6f4lic0awsoi92j25p&unique=true"/>
+
 
 <h3 align="center">Keep This Number At 0 Challenge (Very Easy)</h3>
 <p align="center">
