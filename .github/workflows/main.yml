@@ -16,17 +16,24 @@ jobs:
       - name: Get Follower Count
         id: get_followers
         run: |
-          FOLLOWER_COUNT=$(curl -s https://api.github.com/users/kchan21 | jq '.followers')
+          FOLLOWER_COUNT=$(curl -s https://api.github.com/users/YOUR_USERNAME | jq '.followers')
           echo "followers=${FOLLOWER_COUNT}" >> $GITHUB_ENV
+
+      - name: Debug README Before Update
+        run: |
+          echo "Contents of README.md before update:"
+          cat README.md  # Print the contents of README.md for debugging
 
       - name: Update README
         run: |
           sed -i 's/Followers: [0-9]*/Followers: '"$followers"'/' README.md
-          
+          echo "Contents of README.md after update:"
+          cat README.md  # Print the updated README.md for debugging
+
       - name: Commit and Push Changes
         run: |
           git config --local user.email "your_email@example.com"
           git config --local user.name "GitHub Actions"
           git add README.md
-          git commit -m "Update follower count to $followers"
+          git commit -m "Update follower count to $followers" || echo "No changes to commit"
           git push
