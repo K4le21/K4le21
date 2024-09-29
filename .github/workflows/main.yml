@@ -1,86 +1,32 @@
-name: Update Followers Count
-
-permissions:
-  contents: write  # Allow write access to repository contents
+name: Update Follower Count
 
 on:
   schedule:
     - cron: '0 * * * *' # Runs every hour
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual trigger of the workflow
 
 jobs:
-  update-readme:
+  update-follower-count:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4  # Using v4
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      # Step 1: Fetch followers count from GitHub API
-      - name: Fetch followers count from GitHub API
+      - name: Get Follower Count
+        id: get_followers
         run: |
-          echo "Fetching follower count..."
-          response=$(curl -s -w "\nHTTP_CODE: %{http_code}" -o response.json https://api.github.com/users/K4le21)
-          cat response.json
-          http_code=$(tail -n1 response.json | cut -d' ' -f2)
-          echo "HTTP Response Code: $http_code"
+          FOLLOWER_COUNT=$(curl -s https://api.github.com/users/kchan21 | jq '.followers')
+          echo "followers=${FOLLOWER_COUNT}" >> $GITHUB_ENV
 
-          # Check if the request was successful
-          if [ "$http_code" -ne 200 ]; then
-            echo "Error: API request failed with response code $http_code. Exiting."
-            exit 1
-          fi
-
-          # Extract followers using jq
-          followers=$(jq '.followers' response.json)
-          echo "Extracted Followers count: $followers"
-
-          # Check if followers count was fetched successfully
-          if [ -z "$followers" ] || [ "$followers" == "null" ]; then
-            echo "Error: Could not extract followers count from API response. Exiting."
-            exit 1
-          fi
-
-          # Add 1 to the followers count
-          followers_plus_one=$((followers + 1))
-          echo "Followers count + 1: $followers_plus_one"
-
-      # Step 2: Modify README.md with the new followers count
-      - name: Update README.md with follower count + 1
+      - name: Update README
         run: |
-          echo "Updating README.md with new followers count..."
-
-          # Check if README.md file exists
-          if [ ! -f "README.md" ]; then
-            echo "Error: README.md file not found! Exiting."
-            exit 1
-          fi
-
-          # Check for the placeholder in the README.md
-          placeholder_exists=$(grep -c "Follow Count" README.md)
-          echo "Placeholder exists: $placeholder_exists"
-
-          if [ "$placeholder_exists" -eq 0 ]; then
-            echo "Error: Placeholder 'Follow Count' not found in README.md. Exiting."
-            exit 1
-          fi
-
-          # Replace the placeholder with the new followers count
-          sed -i "s|<span id=\"follower-count\">.*<!-- Follow Count -->.*</span>|<span id=\"follower-count\">$followers_plus_one</span>|g" README.md
-
-          # Display the modified README.md for debugging
-          echo "Modified README.md:"
-          cat README.md
-
-          # Verify that the replacement was successful
-          if ! grep -q "$followers_plus_one" README.md; then
-            echo "Error: Failed to update README.md with new followers count. Exiting."
-            exit 1
-          fi
-
-      # Step 3: Commit and push changes
-      - name: Commit updated README.md
+          sed -i 's/Followers: [0-9]*/Followers: '"$followers"'/' README.md
+          
+      - name: Commit and Push Changes
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --local user.email "your_email@example.com"
+          git config --local user.name "GitHub Actions"
           git add README.md
-          git commit -m "Update follower count + 1" || echo "No changes to commit"
-          git push || echo "No changes to push"
+          git commit -m "Update follower count to $followers"
+          git push
