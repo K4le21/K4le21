@@ -36,11 +36,9 @@ jobs:
           cat README.md  # Print the updated README.md for debugging
 
       - name: Commit and Push Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}  # Use your Personal Access Token secret
         run: |
-          git config --local user.email "your_email@example.com"
+          git config --local user.email "your_email@example.com"  # Your email here
           git config --local user.name "GitHub Actions"
           git add README.md
           git commit -m "Increment follower count to $new_count" || echo "No changes to commit"
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/K4le21/K4le21.git HEAD:main
+          git push origin main  # Use the GITHUB_TOKEN for pushing
