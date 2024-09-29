@@ -39,7 +39,12 @@ jobs:
       - name: Update README.md with follower count + 1
         run: |
           echo "Updating README.md with new followers count..."
-          sed -i "s|<!-- Follow Count -->|$followers_plus_one|g" README.md
+          echo "Followers count + 1: $followers_plus_one"  # Debug output
+          echo "Checking README.md for placeholder..."
+          grep "<!-- Follow Count -->" README.md  # Check if placeholder exists
+
+          # Use sed to replace the placeholder with the new count
+          sed -i "s|<span id=\"follower-count\"> <!-- Follow Count --> </span>|<span id=\"follower-count\">$followers_plus_one</span>|g" README.md
 
           # Print modified README.md content for debugging
           echo "Modified README.md content:"
