@@ -21,7 +21,8 @@
 <h3 align="center">Recently Played:</h3>
 <p align="center"> <img src="https://spotify-recently-played-readme.vercel.app/api?user=dnovyee6f4lic0awsoi92j25p&unique=true"/>
 
-<!-- Follow Count -->
+sed -i "s|<span id=\"follower-count\"> <!-- Follow Count --> </span>|<span id=\"follower-count\">$followers_plus_one</span>|g" README.md
+
 <h3 align="center">Get This Number To <span id="follower-count"> <!-- Follow Count --> </span> Challenge (Very Very Hard)</h3>
 <p align="center">
       <a href="https://github.com/K4le21?tab=followers">
