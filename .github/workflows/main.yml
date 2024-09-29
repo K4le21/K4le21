@@ -35,6 +35,12 @@ jobs:
           followers_plus_one=$((followers + 1))
           echo "Followers + 1: $followers_plus_one"
 
+          # Check if the followers_plus_one variable is empty or not
+          if [ -z "$followers_plus_one" ]; then
+            echo "Error: followers_plus_one is empty. Exiting."
+            exit 1
+          fi
+
       # Step 2: Modify README.md with the new followers count
       - name: Update README.md with follower count + 1
         run: |
