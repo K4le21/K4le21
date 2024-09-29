@@ -18,17 +18,19 @@ jobs:
       - name: Fetch followers count from GitHub API
         run: |
           echo "Fetching follower count..."
-          response=$(curl -s -w "%{http_code}" -o response.json https://api.github.com/users/K4le21)
-          echo "HTTP Response Code: $response"
+          response=$(curl -s -w "\nHTTP_CODE: %{http_code}" -o response.json https://api.github.com/users/K4le21)
+          cat response.json
+          http_code=$(tail -n1 response.json | cut -d' ' -f2)
+          echo "HTTP Response Code: $http_code"
 
           # Check if the request was successful
-          if [ "$response" -ne 200 ]; then
-            echo "Error: API request failed with response code $response. Exiting."
+          if [ "$http_code" -ne 200 ]; then
+            echo "Error: API request failed with response code $http_code. Exiting."
             exit 1
           fi
 
           # Extract followers using jq
-          followers=$(cat response.json | jq '.followers')
+          followers=$(jq '.followers' response.json)
           echo "Extracted Followers count: $followers"
 
           # Check if followers count was fetched successfully
