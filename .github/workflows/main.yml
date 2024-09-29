@@ -10,7 +10,7 @@ jobs:
     name: Update this repo's README with follower count + 1
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Fetch followers count from GitHub API and add 1
         run: |
           followers=$(curl -s https://api.github.com/users/k4le21 | jq '.followers')
