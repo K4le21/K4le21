@@ -16,11 +16,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Get Current Follower Count
+      - name: Get Current Follower Count from GitHub API
         id: get_followers
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the built-in token
         run: |
-          # Extract the current follower count from README.md
-          CURRENT_COUNT=$(grep -oP 'Followers: \K[0-9]+' README.md)
+          USERNAME="k4le21"
+          RESPONSE=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/users/${USERNAME}")
+          CURRENT_COUNT=$(echo $RESPONSE | jq '.followers')
           echo "current_count=${CURRENT_COUNT}" >> $GITHUB_ENV
           echo "Current follower count: ${CURRENT_COUNT}"  # Print the current count
 
