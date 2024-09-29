@@ -1,5 +1,8 @@
 name: Update Followers Count
 
+permissions:
+  contents: write  # Allow write access to repository contents
+
 on:
   schedule:
     - cron: '0 * * * *' # Runs every hour
