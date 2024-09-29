@@ -18,46 +18,53 @@ jobs:
       - name: Fetch followers count from GitHub API
         run: |
           echo "Fetching follower count..."
-          response=$(curl -s https://api.github.com/users/K4le21)
-          
-          # Log the full API response for debugging
-          echo "Full API Response: $response"
+          response=$(curl -s -w "%{http_code}" -o response.json https://api.github.com/users/K4le21)
+          echo "HTTP Response Code: $response"
 
-          followers=$(echo "$response" | jq '.followers')
+          # Check if the request was successful
+          if [ "$response" -ne 200 ]; then
+            echo "Error: API request failed with response code $response. Exiting."
+            exit 1
+          fi
+
+          # Extract followers using jq
+          followers=$(cat response.json | jq '.followers')
           echo "Extracted Followers count: $followers"
+
+          # Check if followers count was fetched successfully
+          if [ -z "$followers" ] || [ "$followers" == "null" ]; then
+            echo "Error: Could not extract followers count from API response. Exiting."
+            exit 1
+          fi
 
           # Add 1 to the followers count
           followers_plus_one=$((followers + 1))
           echo "Followers count + 1: $followers_plus_one"
-
-          # Check if followers_plus_one is empty
-          if [ -z "$followers_plus_one" ]; then
-            echo "Error: followers_plus_one is empty. Exiting."
-            exit 1
-          fi
 
       # Step 2: Modify README.md with the new followers count
       - name: Update README.md with follower count + 1
         run: |
           echo "Updating README.md with new followers count..."
 
-          # Check for the placeholder and update README
+          # Check for the placeholder in the README.md
           placeholder_exists=$(grep -c "Follow Count" README.md)
+          echo "Placeholder exists: $placeholder_exists"
+
           if [ "$placeholder_exists" -eq 0 ]; then
-            echo "Error: Placeholder not found in README.md. Exiting."
+            echo "Error: Placeholder 'Follow Count' not found in README.md. Exiting."
             exit 1
           fi
 
-          # Use sed to replace the placeholder with the new count
+          # Use sed to replace the placeholder with the new followers count
           sed -i "s|<span id=\"follower-count\">.*<!-- Follow Count -->.*</span>|<span id=\"follower-count\">$followers_plus_one</span>|g" README.md
 
-          # Print modified README.md content for debugging
-          echo "Modified README.md content:"
+          # Display the modified README.md for debugging
+          echo "Modified README.md:"
           cat README.md
 
-          # Check if the file was modified
+          # Verify that the replacement was successful
           if ! grep -q "$followers_plus_one" README.md; then
-            echo "Error: README.md was not updated correctly. Exiting."
+            echo "Error: Failed to update README.md with new followers count. Exiting."
             exit 1
           fi
 
