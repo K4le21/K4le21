@@ -4,7 +4,9 @@
 
 <h2 align="center">Connect With Me:</h2>
 <p align="center">
-#<a href="https://www.linkedin.com/in/kchan21/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"></a> 
+<!---
+<a href="https://www.linkedin.com/in/kchan21/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"></a>
+-->
 <a href="mailto:kchan21@csu.fullerton.edu"><img src="https://img.shields.io/badge/mail-EA4335?style=for-the-badge&logo=gmail&logoColor=white"></a>
 </p>
 
